@@ -33,6 +33,7 @@
                             </li>
                         </ul>
                     </div>
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Login</button>
                 </div>
             </nav>
 
@@ -53,5 +54,41 @@
             </div>
         </div>
          <!-- Modal -->
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Autenticar</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <form action="privado.php">
+                            <div class="mb-2 mt-2">
+                                <label for="email" class="form-label">Correo electrónico:</label>
+                                <input type="email" class="form-control" id="email" placeholder="Introducir correo" name="email">
+                            </div>
+                            <div class="mb-2">
+                                <label for="pwd" class="form-label">Contraseña:</label>
+                                <input type="password" class="form-control" id="pwd" placeholder="Introducir contraseña" name="pswd">
+                            </div>
+                            <div class="form-check mb-2">
+                                <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember"> Recuerdame
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Login</button>
+                        </form>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
