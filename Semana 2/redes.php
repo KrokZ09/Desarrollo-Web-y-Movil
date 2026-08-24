@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
     <head>
-        <title>Pagina Principal</title>
+        <title>Redes</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -39,7 +39,7 @@
 
         <!-- Container -->
          <div class="container-fluid">
-            <h1>Pagina Principal</h1><br>
+            <h1>Redes</h1><br>
             <a href="index.php">Ir a Principal</a><br>
             <a href="titulos.php">Ir a Titulos</a><br>
             <a href="quienes_somos.php">Ir a Quienes somos</a><br>
