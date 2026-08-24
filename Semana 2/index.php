@@ -65,7 +65,7 @@
 
                     <!-- Modal body -->
                     <div class="modal-body">
-                        <form action="privado.php">
+                        <form id="loginForm">
                             <div class="mb-2 mt-2">
                                 <label for="email" class="form-label">Correo electrónico:</label>
                                 <input type="email" class="form-control" id="email" placeholder="Introducir correo" name="email">
@@ -90,5 +90,7 @@
                 </div>
             </div>
         </div>
+
+        <script src="contraseñaPrivado.js"></script>
     </body>
 </html>
