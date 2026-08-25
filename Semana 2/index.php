@@ -65,6 +65,9 @@
 
                     <!-- Modal body -->
                     <div class="modal-body">
+
+                        <div id="mensaje"></div>
+
                         <form id="loginForm">
                             <div class="mb-2 mt-2">
                                 <label for="email" class="form-label">Correo electrónico:</label>
