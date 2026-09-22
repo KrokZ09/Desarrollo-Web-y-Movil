@@ -1,0 +1,468 @@
+:root {
+    --cream: #fffdf5;
+    --brown: #8b4a3a;
+    --ink: #17130f;
+    --card: #f8f1df;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: Montserrat, sans-serif;
+}
+
+/* =========================
+   NAVBAR
+   ========================= */
+
+.navbar {
+    height: 78px;
+    border-bottom: 2px solid var(--ink);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 clamp(20px, 5vw, 72px);
+
+    background: var(--brown);
+}
+
+.logo {
+    color: var(--cream);
+    text-decoration: none;
+
+    font-family: Parisienne, cursive;
+    font-size: 39px;
+
+    transform: rotate(-3deg);
+}
+
+.menu-btn {
+    border: 0;
+    background: none;
+
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-content: center;
+    gap: 5px;
+}
+
+.menu-btn i {
+    display: block;
+
+    width: 25px;
+    height: 2px;
+
+    background: var(--cream);
+}
+
+/* =========================
+   CONTENEDOR PRINCIPAL
+   ========================= */
+
+main {
+    max-width: 1180px;
+    margin: auto;
+    padding: 0 30px;
+}
+
+/* =========================
+   HERO
+   ========================= */
+
+.hero {
+    min-height: 620px;
+
+    display: grid;
+    grid-template-columns: 1fr 0.95fr;
+    gap: 70px;
+    align-items: center;
+
+    padding: 75px 0 65px;
+}
+
+.eyebrow {
+    margin: 0 0 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+.hero h1,
+.store-heading h1 {
+    font-family: "DM Serif Display", serif;
+
+    font-size: clamp(60px, 9vw, 112px);
+    line-height: 0.86;
+
+    margin: 0;
+
+    font-weight: 400;
+}
+
+.hero-text {
+    font-family: "DM Serif Display", serif;
+    font-size: 23px;
+
+    margin-top: 28px;
+}
+
+/* =========================
+   IMAGEN PRINCIPAL
+   ========================= */
+
+.frame {
+    border: 2px solid var(--ink);
+    background: var(--card);
+
+    padding: 12px;
+}
+
+.frame img,
+.product-image img {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 1;
+
+    object-fit: cover;
+}
+
+/* =========================
+   HORARIOS
+   ========================= */
+
+.hours {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+
+    padding: 32px 0;
+}
+
+.hours h2,
+.products-section h2 {
+    font-family: "DM Serif Display", serif;
+
+    font-weight: 400;
+    font-size: 35px;
+
+    margin: 0 0 22px;
+}
+
+.hours > div {
+    display: flex;
+    justify-content: space-between;
+
+    border-top: 1px solid #6c6258;
+
+    padding: 14px 0;
+
+    font-size: 14px;
+}
+
+/* =========================
+   PRODUCTOS / CARRUSEL
+   ========================= */
+
+.products-section {
+    padding: 70px 0 35px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-heading h2 {
+    margin: 0;
+}
+
+.section-heading a {
+    font-size: 40px;
+    text-decoration: none;
+}
+
+.product-carousel {
+    display: flex;
+    gap: 16px;
+
+    overflow-x: auto;
+
+    padding: 12px 4px 25px;
+
+    scroll-snap-type: x mandatory;
+}
+
+.product-card {
+    flex: 0 0 clamp(210px, 28vw, 300px);
+
+    border: 2px solid var(--ink);
+    background: var(--card);
+
+    text-decoration: none;
+
+    scroll-snap-align: start;
+}
+
+.product-card > div {
+    padding: 10px;
+
+    border-bottom: 2px solid var(--ink);
+}
+
+.product-card h3 {
+    margin: 15px;
+
+    font-family: "DM Serif Display", serif;
+
+    font-size: 25px;
+    font-weight: 400;
+}
+
+/* =========================
+   BOTÓN PÁGINA PRINCIPAL
+   ========================= */
+
+.home-button {
+    display: inline-block;
+
+    border: 2px solid var(--ink);
+
+    background: var(--brown);
+    color: var(--cream);
+
+    text-decoration: none;
+
+    padding: 13px 23px;
+
+    font-weight: 700;
+
+    margin-bottom: 55px;
+}
+
+/* =========================
+   PÁGINA DE TIENDA
+   ========================= */
+
+.store-page {
+    padding-top: 65px;
+}
+
+.store-heading {
+    padding-bottom: 55px;
+}
+
+.store-heading h1 {
+    font-size: clamp(56px, 8vw, 95px);
+}
+
+.store-heading p:last-child {
+    margin-top: 22px;
+}
+
+/* =========================
+   CATÁLOGO
+   ========================= */
+
+.catalog {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 22px;
+}
+
+.catalog-card {
+    border: 2px solid var(--ink);
+    background: var(--card);
+
+    cursor: pointer;
+}
+
+.catalog-card > img {
+    display: block;
+
+    width: 100%;
+    aspect-ratio: 1.15;
+
+    object-fit: cover;
+
+    border-bottom: 2px solid var(--ink);
+}
+
+.catalog-card div {
+    padding: 18px;
+}
+
+.catalog-card h2 {
+    font-family: "DM Serif Display", serif;
+
+    font-weight: 400;
+    font-size: 31px;
+
+    margin: 0 0 6px;
+}
+
+.catalog-card p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* =========================
+   MODAL DE PRODUCTO
+   ========================= */
+
+.product-modal {
+    position: fixed;
+    inset: 0;
+
+    background: #17130f99;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    z-index: 10;
+}
+
+.product-modal.open {
+    display: flex;
+}
+
+.modal-box {
+    width: min(800px, 100%);
+    max-height: 90vh;
+
+    overflow: auto;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    background: var(--cream);
+
+    border: 2px solid var(--ink);
+
+    position: relative;
+}
+
+.modal-box > img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    min-height: 340px;
+}
+
+.modal-info {
+    padding: 38px;
+}
+
+.modal-info h2 {
+    font-family: "DM Serif Display", serif;
+
+    font-size: 48px;
+    font-weight: 400;
+
+    margin: 0 0 16px;
+}
+
+.modal-info strong {
+    display: block;
+
+    font-size: 22px;
+
+    margin: 25px 0;
+}
+
+.modal-close {
+    position: absolute;
+
+    right: 10px;
+    top: 7px;
+
+    border: 0;
+
+    background: var(--cream);
+
+    font-size: 30px;
+
+    cursor: pointer;
+}
+
+.buy-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border: 2px solid var(--ink);
+
+    background: var(--brown);
+    color: var(--cream);
+
+    font-weight: 700;
+}
+
+/* =========================
+   RESPONSIVE / CELULAR
+   ========================= */
+
+@media (max-width: 720px) {
+
+    .navbar {
+        height: 70px;
+        padding: 0 18px;
+    }
+
+    .logo {
+        font-size: 34px;
+    }
+
+    main {
+        padding: 0 18px;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+
+        gap: 38px;
+
+        min-height: auto;
+
+        padding: 55px 0 48px;
+    }
+
+    .hero h1 {
+        font-size: 72px;
+    }
+
+    .catalog {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-box {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-box > img {
+        min-height: 250px;
+        max-height: 45vh;
+    }
+
+    .modal-info {
+        padding: 25px;
+    }
+}

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Productos — la Nonna</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat:wght@400;500;600;700&family=Parisienne&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a class="logo" href="index.html">"la Nonna"</a>
+
+        <button class="menu-btn" aria-label="Menú">
+            <i></i>
+            <i></i>
+            <i></i>
+        </button>
+    </header>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="store-page">
+
+        <!-- ENCABEZADO -->
+        <section class="store-heading">
+            <p class="eyebrow">LA TIENDA</p>
+
+            <h1>Productos</h1>
+
+            <p>
+                Elige tus pastas y descubre sus detalles.
+            </p>
+        </section>
+
+
+        <!-- CATÁLOGO -->
+        <section class="catalog">
+
+            <article
+                class="catalog-card"
+                data-product="Ravioles"
+                data-description="Pasta fresca rellena, lista para cocinar."
+                data-price="$—"
+            >
+                <img
+                    src="assets/placeholder.png"
+                    alt="Ravioles"
+                >
+
+                <div>
+                    <h2>Ravioles</h2>
+                    <p>Pasta fresca rellena</p>
+                </div>
+            </article>
+
+
+            <article
+                class="catalog-card"
+                data-product="Fettuccine"
+                data-description="Fettuccine fresco para acompañar con tu salsa favorita."
+                data-price="$—"
+            >
+                <img
+                    src="assets/placeholder.png"
+                    alt="Fettuccine"
+                >
+
+                <div>
+                    <h2>Fettuccine</h2>
+                    <p>Pasta fresca</p>
+                </div>
+            </article>
+
+
+            <article
+                class="catalog-card"
+                data-product="Ñoquis"
+                data-description="Ñoquis frescos, suaves y listos para cocinar."
+                data-price="$—"
+            >
+                <img
+                    src="assets/placeholder.png"
+                    alt="Ñoquis"
+                >
+
+                <div>
+                    <h2>Ñoquis</h2>
+                    <p>Pasta fresca</p>
+                </div>
+            </article>
+
+
+            <article
+                class="catalog-card"
+                data-product="Lasaña"
+                data-description="Láminas frescas para preparar una lasaña casera."
+                data-price="$—"
+            >
+                <img
+                    src="assets/placeholder.png"
+                    alt="Lasaña"
+                >
+
+                <div>
+                    <h2>Lasaña</h2>
+                    <p>Pasta fresca</p>
+                </div>
+            </article>
+
+        </section>
+
+
+        <!-- VOLVER AL INICIO -->
+        <a
+            class="home-button"
+            href="index.html"
+        >
+            P. Principal
+        </a>
+
+    </main>
+
+
+    <!-- MODAL DEL PRODUCTO -->
+    <div
+        class="product-modal"
+        id="productModal"
+    >
+
+        <div class="modal-box">
+
+            <button
+                class="modal-close"
+                aria-label="Cerrar"
+            >
+                ×
+            </button>
+
+            <img
+                id="modalImage"
+                src="assets/placeholder.png"
+                alt=""
+            >
+
+            <div class="modal-info">
+
+                <p class="eyebrow">
+                    PRODUCTO
+                </p>
+
+                <h2 id="modalTitle"></h2>
+
+                <p id="modalDescription"></p>
+
+                <strong id="modalPrice"></strong>
+
+                <button class="buy-btn">
+                    Agregar a compra
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
