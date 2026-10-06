@@ -1,7 +1,41 @@
-from fastapi import FastAPI
+import os
+import secrets
 import httpx
 
+from fastapi import (
+    FastAPI,
+    Depends,
+    HTTPException,
+    Request,
+    Response
+)
+
+from fastapi.security import(
+    HTTPBearer,
+    HTTPAuthorizationCredentials
+)
+
 app = FastAPI(title= "Local API Gateway")
+
+security = HTTPBearer(
+    auto_error=False
+)
+
+VAULT_ADDR = os.getenv(
+    "VAULT_ADDR", "http://127.0.0.1:8200"
+)
+
+VAULT_TOKEN = os.getenv(
+    "VAULT_TOKEN"
+)
+
+if not VAULT_TOKEN:
+    raise RuntimeError(
+        "VAULT TOKEN no está configurado"
+    )
+
+
+
 
 BACKEND_URL = "http://localhost:9000" # fastapi
 BACKEND_URL2 = "http://localhost:9100" # fastapi2

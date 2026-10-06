@@ -40,23 +40,47 @@ def verify_gateway(
 
 
 
-@app.get("/health")
-def health():
+@app.get(
+        "/health",
+        dependencies=[Depends(verify_gateway)]
+        )
+def health(
+    x_authenticated_client: str | None = Header(
+        default=None
+    )
+):
     return{
+        "authenticanted_client": x_authenticated_client,
         "status": "OK",
         "service": "Backend API"
     }
-@app.get("/products")
-def products():
+@app.get(
+        "/products",
+        dependencies=[Depends(verify_gateway)]
+        )
+def products(
+     x_authenticated_client: str | None = Header(
+            default=None
+        )
+):
     return{
+        "authenticanted_client": x_authenticated_client,
         "products": [
             {"id": 1, "name": "Notebook", "price": 900000},
             {"id": 2, "name": "Monitor", "price": 250000}
         ]
     }
-@app.get("/orders")
-def orders():
+@app.get(
+        "/orders",
+        dependencies=[Depends(verify_gateway)]
+        )
+def orders(
+     x_authenticated_client: str | None = Header(
+            default=None
+        )
+):
     return{
+        "authenticanted_client": x_authenticated_client,
         "orders": [
             {"id": 1001, "status": "paid"},
             {"id": 1002, "status": "pending"}
