@@ -1,0 +1,35 @@
+"""
+Schema del GraphQL Gateway. Solo lectura: las reglas transaccionales
+(crear pedidos, pagar, anular) siguen en los servicios REST de negocio.
+"""
+type Query {
+  "Resumen de un pedido: estado e ítems (orders) con datos públicos del producto (inventory)."
+  resumenPedido(id: Int!): ResumenPedido
+}
+
+type ResumenPedido {
+  id: Int!
+  estado: String!
+  total: Int!
+  creadoEn: String!
+  "Dato restringido: solo lo puede obtener el rol admin."
+  direccionEntrega: String
+  items: [ItemResumen!]!
+}
+
+type ItemResumen {
+  productId: Int!
+  nombre: String!
+  precioUnitario: Int!
+  cantidad: Int!
+  "Datos públicos actuales del producto. Es null si inventory no responde."
+  producto: ProductoPublico
+}
+
+type ProductoPublico {
+  id: Int!
+  nombre: String!
+  descripcion: String!
+  precio: Int!
+  disponible: Boolean!
+}
