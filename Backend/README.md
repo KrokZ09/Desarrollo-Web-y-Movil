@@ -1,5 +1,7 @@
 # la Nonna — Backend seguro (Evaluación 2)
 
+Este Readme lo genere con claude para que se viese bonito y profesional.
+
 Backend del sitio de pastas frescas "la Nonna". Esta entrega es solo backend; la integración con el frontend queda para la entrega 3.
 
 - **Caso:** (número y nombre del caso)
