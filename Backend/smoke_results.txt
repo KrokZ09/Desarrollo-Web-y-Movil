@@ -1,0 +1,48 @@
+Prueba de extremo a extremo - 2026-11-09T21:21:09
+
+[OK] Catálogo anónimo por el gateway (4 productos)
+[OK] El catálogo público no expone stock
+[OK] Acceso directo a inventory sin credencial de servicio (HTTP 401)
+[OK] Acceso directo a orders sin credencial de servicio (HTTP 401)
+[OK] Acceso directo a clients sin credencial de servicio (HTTP 401)
+[OK] Acceso directo a payments sin credencial de servicio (HTTP 401)
+[OK] Acceso directo a graphql sin credencial de servicio (HTTP 401)
+[OK] Acceso directo a auth sin credencial de servicio (HTTP 401)
+[OK] Operación protegida sin sesión (HTTP 401)
+[OK] Token falso rechazado (HTTP 401)
+[OK] Rutas internas no publicadas en el gateway
+[OK] Registro de clientes (HTTP 201/201)
+[OK] El registro no devuelve la contraseña
+[OK] Correo duplicado rechazado (HTTP 409)
+[OK] Login con clave incorrecta (HTTP 401)
+[OK] Login correcto entrega token
+[OK] Cliente ve su perfil
+[OK] Login de administración
+[OK] Pedido creado con total calculado por el servidor (total 16300 esperado 16300)
+[OK] El estado enviado por el navegador se ignora
+[OK] Cliente B no ve el pedido de A (HTTP 403)
+[OK] Cliente A ve su pedido
+[OK] Listado de B no incluye pedidos de A
+[OK] Cliente no puede editar productos (HTTP 403)
+[OK] Cliente no puede listar todos los pedidos
+[OK] Admin lista todos los pedidos
+[OK] El token del usuario no sirve contra el servicio directo (HTTP 401)
+[OK] Aviso de pago sin firma rechazado (HTTP 401)
+[OK] Aviso de pago con firma falsa rechazado
+[OK] Cliente inicia el pago de su pedido (HTTP 201)
+[OK] Cliente B no puede pagar el pedido de A
+[OK] Aviso firmado con monto alterado no paga el pedido (HTTP 409)
+[OK] Aviso firmado válido marca el pedido como PAGADO (HTTP 200)
+[OK] Aviso duplicado no se procesa dos veces
+[OK] No se puede anular un pedido pagado
+[OK] GraphQL combina orders (estado) con inventory (descripción)
+[OK] GraphQL: el cliente no obtiene la dirección
+[OK] GraphQL: el admin sí obtiene la dirección
+[OK] GraphQL: pedido ajeno no se entrega
+[OK] GraphQL: introspección deshabilitada
+[OK] GraphQL sin sesión
+[OK] Sin stock el segundo pedido es rechazado (HTTP 201/409)
+[OK] Anular conserva el registro
+[OK] Anular devuelve el stock (HTTP 201)
+
+Total: 44 comprobaciones, 44 correctas, 0 con falla

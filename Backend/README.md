@@ -1,15 +1,68 @@
 # la Nonna — Backend seguro (Evaluación 2)
 
+Este Readme lo genere con claude para que se viese bonito y profesional.
+
 Backend del sitio de pastas frescas "la Nonna". Esta entrega es solo backend; la integración con el frontend queda para la entrega 3.
 
-- **Caso:** (número y nombre del caso)
-- **Integrantes:** (nombres)
-- **Versión del frontend:** (commit o tag del repositorio del frontend)
+- **Caso:** (33. Pastas frescas “La Nonna” – ravioles, lasañas y tallarines)
+- **Integrantes:** (Cristobal Ramirez)
+- **Versión del frontend:** (https://github.com/KrokZ09/Desarrollo-Web-y-Movil/tree/2191dd0c96c286133fefcc2f00519b2a534e8295/Frontend)
 - **Integración con el frontend:** pendiente para la entrega 3. Los contratos usan los mismos campos que muestra el frontend (`id, nombre, descripcion, precio`), así que la integración será reemplazar los datos fijos del HTML por llamadas a la API.
 
 ## Cómo ejecutar
 
-> Completar al terminar el Módulo 10: requisitos, instalación, variables de entorno (`.env.example`), comando para iniciar y detener cada servicio, datos de prueba y cómo correr las pruebas.
+El entorno virtual se encuentra en la raíz del repositorio, un nivel por encima de `Backend`.
+
+**Requisitos**
+
+- Python 3.12.
+- Dependencias indicadas en `requirements.txt`.
+- Variables de entorno configuradas mediante archivos `.env`.
+- Puertos locales disponibles: 8000–8006.
+
+**Inicio de los servicios**
+
+Desde PowerShell:
+
+```powershell
+cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
+.\.venv\Scripts\Activate.ps1
+cd Backend
+python run_all.py
+```
+
+El resultado esperado es:
+
+```text
+OK auth       puerto 8001
+OK clients    puerto 8002
+OK inventory  puerto 8003
+OK orders     puerto 8004
+OK payments   puerto 8005
+OK graphql    puerto 8006
+OK gateway    puerto 8000
+
+Todo listo.
+```
+
+**Ejecución de pruebas**
+
+En una segunda terminal:
+
+```powershell
+cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
+.\.venv\Scripts\Activate.ps1
+cd Backend
+python smoke_test.py
+```
+
+**Detención**
+
+En la terminal donde se ejecuta `run_all.py`:
+
+```text
+Ctrl + C
+```
 
 ## Arquitectura (resumen)
 
@@ -483,16 +536,371 @@ Operación GraphQL (se detalla en el Módulo 8): `Query.resumenPedido(id)`, reso
 
 ## Módulo 7 — Datos sensibles y secretos del cliente
 
-> Matriz de datos, decisión sobre secretos del cliente y casos de validación con su resultado.
+### 7.1 Clasificación de la información
+
+La aplicación administra información pública, personal, comercial y técnica. Cada categoría tiene distintos requisitos de acceso y protección.
+
+| Categoría | Datos | Nivel de exposición | Protección |
+|---|---|---|---|
+| Información pública | Nombre, descripción, precio y disponibilidad de productos | Público | DTO público; no incluye stock |
+| Datos personales | Nombre, correo electrónico y teléfono del cliente | Restringido | Acceso mediante autenticación |
+| Dirección de entrega | Dirección asociada a un pedido | Sensible / restringido | Solo el propietario del pedido y administradores autorizados |
+| Credenciales | Contraseña ingresada durante el registro o login | Secreto | Hash almacenado; nunca se devuelve en respuestas |
+| Sesiones | JWT de usuario | Secreto de sesión | Validación de firma y expiración |
+| Información comercial | Stock, pedidos, totales y estados de pago | Interno o restringido | Control de acceso por rol y propiedad |
+| Información de pagos | Identificadores de eventos y pagos | Interno | Acceso exclusivo de payments y servicios autorizados |
+| Secretos técnicos | Claves JWT, tokens de servicio y secreto del webhook | Crítico | Variables de entorno; nunca se exponen al navegador |
+
+### 7.2 Decisiones de protección
+
+**Contraseñas**
+
+- Las contraseñas se reciben únicamente durante el registro y la autenticación.
+- El sistema almacena una representación hash, nunca la contraseña original.
+- Las respuestas de registro y perfil no contienen contraseñas ni hashes.
+- El login utiliza un mensaje genérico de error para evitar revelar si un correo está registrado.
+
+**Tokens de sesión**
+
+- Auth emite JWT después de autenticar correctamente al usuario.
+- El token contiene la identidad y el rol necesarios para la autorización.
+- El API Gateway verifica la firma y vigencia del token antes de permitir el acceso a rutas protegidas.
+- Un token inválido o ausente produce HTTP 401.
+- El token de usuario no reemplaza las credenciales técnicas requeridas para comunicarse directamente con los microservicios.
+
+**Datos personales y direcciones**
+
+- El cliente puede consultar y modificar únicamente su propio perfil.
+- Un cliente no puede consultar pedidos pertenecientes a otros clientes.
+- La dirección de entrega no forma parte del catálogo público.
+- En GraphQL, la dirección se restringe según el rol del usuario.
+- Los administradores pueden acceder a información necesaria para gestionar los pedidos.
+
+**Información de inventario**
+
+- El stock se mantiene como dato interno de inventory.
+- El DTO público de productos no incluye la cantidad disponible.
+- El navegador no puede ajustar directamente el stock.
+- Las operaciones de reserva y liberación se realizan mediante rutas internas autorizadas.
+
+### 7.3 Secretos del cliente y del sistema
+
+Se establece una separación entre las credenciales del usuario y los secretos técnicos de la aplicación.
+
+| Elemento | ¿Puede llegar al navegador? | Justificación |
+|---|---|---|
+| JWT del usuario | Sí, como credencial de sesión | Permite realizar solicitudes autenticadas |
+| Contraseña original | No, salvo durante el envío de registro/login | No debe almacenarse ni registrarse |
+| Hash de contraseña | No | Es información interna de Auth |
+| Clave de firma JWT | No | Permite firmar y verificar tokens |
+| X-Service-Token | No | Autentica comunicaciones entre servicios |
+| PAYMENTS_WEBHOOK_SECRET | No | Permite verificar avisos del proveedor |
+| Credenciales de base de datos | No | Solo las utiliza el servicio correspondiente |
+
+El frontend no debe contener secretos de integración ni credenciales de microservicios. En la futura integración, deberá manejar el JWT como una credencial de tipo Bearer y evitar su exposición en logs, URLs o mensajes de error.
+
+Para producción, la comunicación debe utilizar HTTPS y el almacenamiento de la sesión debe protegerse frente a ataques XSS y CSRF según el mecanismo de autenticación elegido.
+
+### 7.4 Casos de validación de seguridad
+
+| Caso | Resultado esperado | Evidencia |
+|---|---|---|
+| Registro de usuario | 201 sin devolver contraseña | Prueba de registro |
+| Registro con correo duplicado | 409 | Smoke test |
+| Login con contraseña incorrecta | 401 genérico | Smoke test |
+| Solicitud protegida sin token | 401 | Smoke test |
+| Token falso | 401 | Smoke test |
+| Cliente consulta pedido ajeno | 403 | Smoke test |
+| Cliente intenta editar productos | 403 | Smoke test |
+| Acceso directo a servicio sin token técnico | 401 | Smoke test |
+| Webhook sin firma | 401 | Smoke test |
+| Webhook con firma falsa | 401 | Smoke test |
+
+---
 
 ## Módulo 8 — Separación privada y GraphQL
 
-> Mapa de servicios, schema GraphQL, resolvers, consulta de prueba y matriz de autorización.
+### 8.1 Arquitectura y frontera de acceso
+
+GraphQL Gateway se implementa como un componente privado, separado del API Gateway público.
+
+El navegador no debe conectarse directamente al puerto del servicio GraphQL. Todas las solicitudes externas ingresan por:
+
+`POST /api/v1/graphql`
+
+El API Gateway autentica al usuario, verifica su rol y reenvía la solicitud al servicio GraphQL mediante su credencial técnica.
+
+GraphQL Gateway consulta a orders e inventory utilizando sus respectivos tokens de servicio. De esta forma, cada microservicio conserva la autoridad sobre sus propios datos.
+
+### 8.2 Responsabilidades
+
+| Componente | Responsabilidad |
+|---|---|
+| API Gateway | Autenticación, autorización inicial y reenvío de solicitudes |
+| GraphQL Gateway | Interpretación de consultas y coordinación de resolvers |
+| Resolver de pedidos | Obtención de pedidos desde orders |
+| Resolver de productos | Obtención de descripciones desde inventory |
+| orders | Autoridad sobre propietario, estado, total y dirección del pedido |
+| inventory | Autoridad sobre información y disponibilidad de productos |
+
+GraphQL no mantiene una copia independiente de los pedidos ni del inventario. Su función es combinar información entregada por los servicios responsables.
+
+### 8.3 Operación GraphQL
+
+La operación principal es `resumenPedido(id)`, que permite consultar información agregada de un pedido.
+
+Ejemplo conceptual de consulta:
+
+```graphql
+query {
+  resumenPedido(id: 15) {
+    id
+    estado
+    total
+    items {
+      nombreProducto
+      cantidad
+      descripcion
+    }
+  }
+}
+```
+
+El resolver obtiene los datos del pedido desde orders y complementa la información de sus productos consultando inventory.
+
+La dirección de entrega se trata como un campo restringido y no se entrega a clientes que no tengan autorización administrativa.
+
+### 8.4 Matriz de autorización
+
+| Operación o campo | Cliente propietario | Cliente ajeno | Admin |
+|---|---|---|---|
+| Consultar resumen de pedido propio | Permitido | — | Permitido |
+| Consultar resumen de pedido ajeno | Denegado | Denegado | Permitido |
+| Consultar estado del pedido | Permitido | Denegado | Permitido |
+| Consultar descripción de productos | Permitido | Denegado si pertenece a un pedido ajeno | Permitido |
+| Consultar dirección de entrega | Denegado | Denegado | Permitido |
+| Ejecutar introspección del esquema | Deshabilitado | Deshabilitado | Deshabilitado |
+
+La autorización se comprueba en el backend y no depende de que el frontend oculte campos.
+
+### 8.5 Controles de seguridad
+
+- El servicio GraphQL requiere autenticación a través del API Gateway.
+- El acceso directo al servicio sin credencial técnica es rechazado.
+- Los resolvers respetan la identidad y el rol del usuario.
+- La propiedad del pedido se comprueba en orders.
+- La autorización de campos sensibles se realiza en GraphQL.
+- La introspección está deshabilitada para reducir la exposición del esquema.
+- Las consultas que no pueden completarse por fallos de una dependencia pueden devolver errores parciales sin inventar información.
+
+### 8.6 Pruebas realizadas
+
+| Prueba | Resultado |
+|---|---|
+| GraphQL combina estado de orders y descripción de inventory | Correcto |
+| Cliente no obtiene la dirección de entrega | Correcto |
+| Administrador puede obtener la dirección | Correcto |
+| Pedido ajeno no se entrega al cliente | Correcto |
+| Introspección deshabilitada | Correcto |
+| GraphQL sin sesión | HTTP 401 |
+
+---
 
 ## Módulo 9 — Analítica y gRPC
 
-> ADR de aplicabilidad y reporte de la prueba de carga.
+### 9.1 Decisión arquitectónica (ADR)
+
+**ADR-001: Uso de REST frente a gRPC para la comunicación entre microservicios.**
+
+**Estado:** Decisión adoptada para esta entrega.
+
+**Contexto**
+
+La aplicación la Nonna está compuesta por servicios independientes que se comunican principalmente mediante HTTP y JSON.
+
+Los servicios tienen responsabilidades acotadas y un volumen de operaciones esperado relativamente bajo, propio de una tienda de pastas frescas.
+
+**Alternativas consideradas**
+
+| Alternativa | Ventajas | Desventajas |
+|---|---|---|
+| REST + JSON | Simple, ampliamente compatible, fácil de probar y depurar | Mayor volumen de mensajes que un protocolo binario |
+| gRPC + Protocol Buffers | Contratos tipados, mensajes compactos y comunicación eficiente | Requiere definir archivos `.proto`, generar clientes y administrar infraestructura adicional |
+| Comunicación directa entre bases de datos | Reduce algunas llamadas entre servicios | Acopla los servicios y rompe la separación de responsabilidades |
+
+**Decisión**
+
+Se mantiene REST como mecanismo de comunicación entre los microservicios de esta entrega.
+
+No se incorpora gRPC porque el escenario actual no presenta una necesidad que justifique su complejidad adicional. No existe un requisito de comunicación de alta frecuencia, transmisión continua o interoperabilidad que haga indispensable adoptar un protocolo binario.
+
+**Consecuencias**
+
+- Los contratos pueden inspeccionarse fácilmente mediante HTTP.
+- Los servicios pueden probarse de manera independiente.
+- Se mantiene una arquitectura uniforme.
+- Si el volumen de comunicación aumenta, gRPC puede evaluarse para operaciones internas específicas sin reemplazar necesariamente toda la API REST.
+
+Esta decisión no implica que gRPC sea inferior, sino que su incorporación no aporta una ventaja proporcional a su costo para el alcance actual.
+
+### 9.2 Analítica y observabilidad
+
+En esta entrega se prioriza la observabilidad operacional por sobre la implementación de un sistema de analítica comercial.
+
+El API Gateway registra información de las solicitudes, incluyendo:
+
+- Identificador de correlación.
+- Identificador de la ruta.
+- Método HTTP.
+- Ruta solicitada.
+- Código de respuesta.
+- Identidad del usuario cuando corresponde.
+
+Los registros permiten relacionar solicitudes y detectar errores durante la comunicación entre servicios.
+
+Los logs no deben almacenar contraseñas, JWT completos, tokens de servicio, firmas ni secretos.
+
+**Diferencia entre observabilidad y analítica**
+
+| Concepto | Objetivo | Situación en esta entrega |
+|---|---|---|
+| Logs operacionales | Registrar solicitudes y errores | Implementado |
+| Identificador de correlación | Seguir una solicitud entre componentes | Implementado en el Gateway |
+| Métricas de rendimiento | Medir latencia, throughput y errores | Se deben obtener mediante una prueba de carga |
+| Analítica comercial | Evaluar ventas, productos más vendidos y comportamiento de clientes | Fuera del alcance implementado |
+| Dashboard de métricas | Visualizar indicadores en tiempo real | No implementado |
+
+Los registros operacionales constituyen una base para incorporar posteriormente métricas y analítica, pero no deben confundirse con un sistema de Business Intelligence.
+
+### 9.3 Prueba de carga
+
+La prueba de carga tiene como objetivo evaluar el comportamiento del API Gateway y los servicios ante múltiples solicitudes concurrentes.
+
+Se propone utilizar como escenario principal el catálogo público, ya que permite generar solicitudes sin depender de sesiones de usuario.
+
+**Escenario de prueba propuesto**
+
+| Parámetro | Configuración |
+|---|---|
+| Endpoint | `GET /api/v1/products` |
+| Método | GET |
+| Autenticación | Anónima |
+| Usuarios virtuales | Por definir |
+| Duración | Por definir |
+| Herramienta | k6 o herramienta equivalente |
+| Indicadores | Solicitudes por segundo, latencia y porcentaje de errores |
+
+**Indicadores que deben registrarse**
+
+| Indicador | Descripción |
+|---|---|
+| Throughput | Cantidad de solicitudes procesadas por segundo |
+| Latencia promedio | Tiempo medio de respuesta |
+| Latencia p95 | Tiempo por debajo del cual responde el 95 % de las solicitudes |
+| Tasa de errores | Porcentaje de solicitudes con respuestas fallidas |
+| Disponibilidad | Capacidad de mantener el servicio operativo durante la prueba |
+
+**Resultados**
+
+La ejecución de `smoke_test.py` valida funcionalidad y seguridad, pero no constituye una prueba de carga.
+
+Por lo tanto, los resultados cuantitativos de rendimiento quedan pendientes de una ejecución específica. No se atribuyen valores de throughput o latencia sin mediciones reales.
+
+---
 
 ## Módulo 10 — Integración y pruebas
 
-> Matriz requisito | pantalla | servicio | prueba | resultado | evidencia.
+### 10.1 Estado de integración
+
+La entrega actual contempla exclusivamente el backend de la aplicación la Nonna.
+
+El frontend mantiene sus pantallas de inicio y catálogo, pero la conexión entre ambas capas queda pendiente para la Evaluación 3.
+
+Los contratos del backend utilizan los campos acordados para los productos:
+
+`id`, `nombre`, `descripcion`, `precio` y `disponible`.
+
+La futura integración reemplazará los datos fijos del HTML por solicitudes HTTP al API Gateway.
+
+### 10.2 Correspondencia entre requisitos y pruebas
+
+| Requisito | Servicio | Prueba realizada | Resultado |
+|---|---|---|---|
+| S01–S02: catálogo y detalle de productos | inventory | Catálogo anónimo y consulta de productos | Aprobado |
+| S03–S04: registro y login | Auth | Registro, correo duplicado, login correcto e incorrecto | Aprobado |
+| S05: consultar perfil | clients | Cliente consulta su perfil | Aprobado |
+| S06: editar perfil | clients | Operación protegida y validaciones | Validar cobertura específica |
+| S07: crear pedido | orders | Total calculado por el servidor | Aprobado |
+| S08–S09: listar y consultar pedidos | orders | Aislamiento entre clientes y consulta del propietario | Aprobado |
+| S10: anular pedido | orders | Anulación y conservación del registro | Aprobado |
+| S11: iniciar pago | payments | Inicio de pago y validación de propiedad | Aprobado |
+| S12: recibir webhook | payments | Firma ausente, firma falsa, monto alterado, firma válida y duplicados | Aprobado |
+| S13–S15: administración de productos y stock | inventory | Restricción de permisos y ajuste de stock | Aprobado |
+| S16–S17: administración de pedidos | orders | Acceso administrativo y controles de estado | Validar cobertura específica |
+| G01: agregación GraphQL | GraphQL Gateway | Agregación, autorización por campo e introspección | Aprobado |
+| Seguridad entre servicios | Gateway y microservicios | Acceso directo sin credencial técnica | Aprobado |
+| Control de inventario | inventory y orders | Rechazo por falta de stock y devolución al anular | Aprobado |
+
+### 10.3 Pruebas de integración y seguridad
+
+Se desarrolló un conjunto automatizado de pruebas mediante `smoke_test.py`, que utiliza el API Gateway como punto de entrada y verifica el comportamiento integrado de los servicios.
+
+Las pruebas consideran:
+
+- Acceso público al catálogo.
+- Protección de los servicios privados.
+- Autenticación y autorización.
+- Separación de información entre clientes.
+- Cálculo de precios y totales en el servidor.
+- Restricciones de administración.
+- Integridad de pedidos.
+- Reserva y devolución de stock.
+- Inicio y validación de pagos.
+- Verificación de firmas HMAC en webhooks.
+- Idempotencia de notificaciones de pago.
+- Integración entre orders, inventory y GraphQL.
+
+### 10.4 Resultado de ejecución
+
+**Resultado final de `smoke_test.py`:**
+
+| Indicador | Resultado |
+|---|---:|
+| Pruebas ejecutadas | 44 |
+| Pruebas aprobadas | 44 |
+| Pruebas fallidas | 0 |
+| Porcentaje de aprobación | 100 % |
+
+**Estado:** todas las pruebas automatizadas finalizaron correctamente.
+
+El resultado se guarda en el archivo:
+
+`smoke_results.txt`
+
+Este archivo constituye evidencia de la ejecución del conjunto de pruebas.
+
+
+### 10.5 Evidencias de entrega
+
+| Evidencia | Archivo o ubicación |
+|---|---|
+| Código fuente de los microservicios | `Backend/` |
+| Configuración de rutas del API Gateway | `Backend/gateway/` |
+| Configuración de dependencias | `requirements.txt` |
+| Variables de entorno de ejemplo | `.env.example` |
+| Pruebas automatizadas | `Backend/smoke_test.py` |
+| Resultado de las pruebas | `Backend/smoke_results.txt` |
+| Registros de ejecución | `Backend/logs/` |
+| Frontend original | `Frontend/` |
+
+### 10.6 Conclusión de la evaluación
+
+El backend de la Nonna implementa una arquitectura de microservicios con un API Gateway como punto único de entrada, autenticación basada en JWT y credenciales técnicas para proteger las comunicaciones internas.
+
+Las responsabilidades de clientes, inventario, pedidos y pagos se encuentran separadas. Además, se incorporan controles de autorización por rol y propiedad, validación de firmas en las notificaciones de pago, protección de información sensible y control de consistencia del stock.
+
+La integración GraphQL permite combinar información de distintos servicios sin eliminar la autoridad de cada uno sobre sus datos.
+
+La ejecución final de las pruebas automatizadas obtuvo **44 de 44 pruebas aprobadas**, verificando el funcionamiento de los principales flujos y controles de seguridad del backend.
+
+La integración con el frontend, la analítica comercial y las mediciones de rendimiento quedan como aspectos de evolución o trabajo posterior según el alcance de esta entrega.
