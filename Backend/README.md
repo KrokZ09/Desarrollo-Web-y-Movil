@@ -4,14 +4,65 @@ Este Readme lo genere con claude para que se viese bonito y profesional.
 
 Backend del sitio de pastas frescas "la Nonna". Esta entrega es solo backend; la integración con el frontend queda para la entrega 3.
 
-- **Caso:** (número y nombre del caso)
-- **Integrantes:** (nombres)
-- **Versión del frontend:** (commit o tag del repositorio del frontend)
+- **Caso:** (33. Pastas frescas “La Nonna” – ravioles, lasañas y tallarines)
+- **Integrantes:** (Cristobal Ramirez)
+- **Versión del frontend:** (https://github.com/KrokZ09/Desarrollo-Web-y-Movil/tree/2191dd0c96c286133fefcc2f00519b2a534e8295/Frontend)
 - **Integración con el frontend:** pendiente para la entrega 3. Los contratos usan los mismos campos que muestra el frontend (`id, nombre, descripcion, precio`), así que la integración será reemplazar los datos fijos del HTML por llamadas a la API.
 
 ## Cómo ejecutar
 
-> Completar al terminar el Módulo 10: requisitos, instalación, variables de entorno (`.env.example`), comando para iniciar y detener cada servicio, datos de prueba y cómo correr las pruebas.
+El entorno virtual se encuentra en la raíz del repositorio, un nivel por encima de `Backend`.
+
+**Requisitos**
+
+- Python 3.12.
+- Dependencias indicadas en `requirements.txt`.
+- Variables de entorno configuradas mediante archivos `.env`.
+- Puertos locales disponibles: 8000–8006.
+
+**Inicio de los servicios**
+
+Desde PowerShell:
+
+```powershell
+cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
+.\.venv\Scripts\Activate.ps1
+cd Backend
+python run_all.py
+```
+
+El resultado esperado es:
+
+```text
+OK auth       puerto 8001
+OK clients    puerto 8002
+OK inventory  puerto 8003
+OK orders     puerto 8004
+OK payments   puerto 8005
+OK graphql    puerto 8006
+OK gateway    puerto 8000
+
+Todo listo.
+```
+
+**Ejecución de pruebas**
+
+En una segunda terminal:
+
+```powershell
+cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
+.\.venv\Scripts\Activate.ps1
+cd Backend
+python smoke_test.py
+```
+
+**Detención**
+
+En la terminal donde se ejecuta `run_all.py`:
+
+```text
+Ctrl + C
+```
 
 ## Arquitectura (resumen)
 
@@ -828,62 +879,8 @@ El resultado se guarda en el archivo:
 
 Este archivo constituye evidencia de la ejecución del conjunto de pruebas.
 
-### 10.5 Procedimiento de instalación y ejecución
 
-El entorno virtual se encuentra en la raíz del repositorio, un nivel por encima de `Backend`.
-
-**Requisitos**
-
-- Python 3.12.
-- Dependencias indicadas en `requirements.txt`.
-- Variables de entorno configuradas mediante archivos `.env`.
-- Puertos locales disponibles: 8000–8006.
-
-**Inicio de los servicios**
-
-Desde PowerShell:
-
-```powershell
-cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
-.\.venv\Scripts\Activate.ps1
-cd Backend
-python run_all.py
-```
-
-El resultado esperado es:
-
-```text
-OK auth       puerto 8001
-OK clients    puerto 8002
-OK inventory  puerto 8003
-OK orders     puerto 8004
-OK payments   puerto 8005
-OK graphql    puerto 8006
-OK gateway    puerto 8000
-
-Todo listo.
-```
-
-**Ejecución de pruebas**
-
-En una segunda terminal:
-
-```powershell
-cd "E:\Desarrollo web\Desarrollo-Web-y-Movil"
-.\.venv\Scripts\Activate.ps1
-cd Backend
-python smoke_test.py
-```
-
-**Detención**
-
-En la terminal donde se ejecuta `run_all.py`:
-
-```text
-Ctrl + C
-```
-
-### 10.6 Evidencias de entrega
+### 10.5 Evidencias de entrega
 
 | Evidencia | Archivo o ubicación |
 |---|---|
@@ -896,7 +893,7 @@ Ctrl + C
 | Registros de ejecución | `Backend/logs/` |
 | Frontend original | `Frontend/` |
 
-### 10.7 Conclusión de la evaluación
+### 10.6 Conclusión de la evaluación
 
 El backend de la Nonna implementa una arquitectura de microservicios con un API Gateway como punto único de entrada, autenticación basada en JWT y credenciales técnicas para proteger las comunicaciones internas.
 
