@@ -103,9 +103,21 @@ async def gateway(request: Request, full_path: str):
     except httpx.HTTPError:
         return reply(503, "Servicio no disponible, intenta más tarde")
 
+    log.info(
+    "%s DEBUG service=%s access=%s upstream_status=%s",
+    cid,
+    route.service,
+    route.access,
+    resp.status_code
+    )
+    
+    
     status = resp.status_code
     if status == 401 and route.service != "auth":
-        status = 502  # el servicio rechazó al gateway: error de integración, no del usuario
+        if route.access != "signed":
+            status = 502
+
+
     user = identity[0] if identity else "-"
     log.info("%s %s %s %s -> %s (usuario %s)", cid, route.id, request.method, path, status, user)
     return Response(
