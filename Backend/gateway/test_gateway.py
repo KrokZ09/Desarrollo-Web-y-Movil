@@ -177,3 +177,27 @@ def test_login_incorrecto_de_auth_se_entrega_como_401():
 def test_cada_respuesta_trae_identificador_de_correlacion():
     r = client.get("/api/v1/products")
     assert r.headers["X-Correlation-Id"] == CALLS[0]["headers"]["X-Correlation-Id"]
+
+
+def test_cors_permite_el_origen_del_frontend():
+    headers = {
+        "Origin": "http://localhost:5500",
+        "Access-Control-Request-Method": "GET",
+        "Access-Control-Request-Headers": "authorization",
+    }
+    r = client.options("/api/v1/products", headers=headers)
+    assert r.status_code == 200
+    assert r.headers["access-control-allow-origin"] == "http://localhost:5500"
+    assert CALLS == []
+
+
+def test_cors_no_permite_otros_origenes():
+    headers = {"Origin": "http://sitio-malo.example", "Access-Control-Request-Method": "GET"}
+    r = client.options("/api/v1/products", headers=headers)
+    assert "access-control-allow-origin" not in r.headers
+    assert CALLS == []
+
+
+def test_respuesta_normal_lleva_cabecera_cors_para_el_origen_permitido():
+    r = client.get("/api/v1/products", headers={"Origin": "http://127.0.0.1:5500"})
+    assert r.headers["access-control-allow-origin"] == "http://127.0.0.1:5500"

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 
 import httpx
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 
 from policies import AuthenticationPolicy, AuthorizationPolicy, RateLimitPolicy
@@ -15,6 +16,20 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
 log = logging.getLogger("gateway")
 
 app = FastAPI(title="api-gateway")
+
+# CORS: solo el sitio del frontend (por defecto, servido en el puerto 5500) puede llamar a la API desde el navegador
+ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.environ.get("ALLOWED_ORIGINS", "http://127.0.0.1:5500,http://localhost:5500").split(",")
+    if o.strip()
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ALLOWED_ORIGINS,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["Authorization", "Content-Type"],
+    expose_headers=["X-Correlation-Id"],
+)
 
 MAX_BODY = 64 * 1024  # 64 KB
 TIMEOUT = 5.0  # plazo máximo por llamada interna (segundos)
@@ -103,21 +118,9 @@ async def gateway(request: Request, full_path: str):
     except httpx.HTTPError:
         return reply(503, "Servicio no disponible, intenta más tarde")
 
-    log.info(
-    "%s DEBUG service=%s access=%s upstream_status=%s",
-    cid,
-    route.service,
-    route.access,
-    resp.status_code
-    )
-    
-    
     status = resp.status_code
     if status == 401 and route.service != "auth":
-        if route.access != "signed":
-            status = 502
-
-
+        status = 502  # el servicio rechazó al gateway: error de integración, no del usuario
     user = identity[0] if identity else "-"
     log.info("%s %s %s %s -> %s (usuario %s)", cid, route.id, request.method, path, status, user)
     return Response(
