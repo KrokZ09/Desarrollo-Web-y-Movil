@@ -466,3 +466,6 @@ main {
         padding: 25px;
     }
 }
+
+.status-msg { grid-column: 1 / -1; margin: 0; padding: 20px 0; }
+.buy-btn:disabled { opacity: 0.5; cursor: not-allowed; }

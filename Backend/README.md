@@ -114,7 +114,7 @@ El frontend actual tiene dos pantallas: inicio (carrusel y horarios) y catálogo
 
 - El navegador nunca envía precios, totales ni estados de pago: el servidor los calcula.
 - No hay `DELETE` de productos; un producto se retira con `disponible=false` (S14).
-- Estados del pedido: `PENDIENTE_PAGO → PAGADO → EN_PREPARACION → DESPACHADO → ENTREGADO`; `ANULADO` desde `PENDIENTE_PAGO`, y desde `PAGADO` solo por administración.
+- Estados del pedido: `PENDIENTE_PAGO → PAGADO → EN_PREPARACION → DESPACHADO → ENTREGADO`; `ANULADO` únicamente desde `PENDIENTE_PAGO`. Los pedidos pagados no pueden anularse mediante S10.
 - Pagos duplicados: `payments` guarda cada `eventId`; un aviso repetido responde 200 sin reprocesar.
 
 ### Ejemplos JSON
@@ -830,7 +830,7 @@ La futura integración reemplazará los datos fijos del HTML por solicitudes HTT
 | S03–S04: registro y login | Auth | Registro, correo duplicado, login correcto e incorrecto | Aprobado |
 | S05: consultar perfil | clients | Cliente consulta su perfil | Aprobado |
 | S06: editar perfil | clients | Operación protegida y validaciones | Validar cobertura específica |
-| S07: crear pedido | orders | Total calculado por el servidor | Aprobado |
+| S16–S17: administración de pedidos | orders | Acceso administrativo y controles de estado | Validar cobertura específica |
 | S08–S09: listar y consultar pedidos | orders | Aislamiento entre clientes y consulta del propietario | Aprobado |
 | S10: anular pedido | orders | Anulación y conservación del registro | Aprobado |
 | S11: iniciar pago | payments | Inicio de pago y validación de propiedad | Aprobado |
