@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Mi cuenta — la Nonna</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat:wght@400;500;600;700&family=Parisienne&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="extras.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a class="logo" href="index.html">"la Nonna"</a>
+
+        <button class="menu-btn" aria-label="Menú">
+            <i></i>
+            <i></i>
+            <i></i>
+        </button>
+    </header>
+
+
+    <main class="store-page">
+
+        <section class="store-heading">
+            <p class="eyebrow">MI CUENTA</p>
+
+            <h1>Cuenta</h1>
+
+            <p>
+                Ingresa o crea tu cuenta para hacer pedidos.
+            </p>
+        </section>
+
+
+        <!-- SIN SESIÓN: ingresar o crear cuenta -->
+        <section class="account-grid" id="guestView">
+
+            <form class="form-card" id="loginForm">
+                <h2>Ingresar</h2>
+
+                <label class="field">
+                    Correo
+                    <input type="email" name="email" autocomplete="email" maxlength="254" required>
+                </label>
+
+                <label class="field">
+                    Contraseña
+                    <input type="password" name="password" autocomplete="current-password" maxlength="128" required>
+                </label>
+
+                <button class="buy-btn" type="submit">Ingresar</button>
+
+                <p class="form-msg" role="alert"></p>
+            </form>
+
+
+            <form class="form-card" id="registerForm">
+                <h2>Crear cuenta</h2>
+
+                <label class="field">
+                    Nombre
+                    <input type="text" name="nombre" autocomplete="name" maxlength="100" required>
+                </label>
+
+                <label class="field">
+                    Correo
+                    <input type="email" name="email" autocomplete="email" maxlength="254" required>
+                </label>
+
+                <label class="field">
+                    Teléfono (opcional)
+                    <input type="tel" name="telefono" autocomplete="tel" maxlength="20">
+                </label>
+
+                <label class="field">
+                    Contraseña (mínimo 8 caracteres)
+                    <input type="password" name="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+                </label>
+
+                <button class="buy-btn" type="submit">Crear cuenta</button>
+
+                <p class="form-msg" role="alert"></p>
+            </form>
+
+        </section>
+
+
+        <!-- CON SESIÓN: perfil -->
+        <section class="form-card member-card" id="memberView" hidden>
+            <h2>Mi perfil</h2>
+
+            <div id="profile"></div>
+
+            <button class="buy-btn" id="logoutBtn" type="button">Cerrar sesión</button>
+        </section>
+
+
+        <a class="home-button" href="index.html">P. Principal</a>
+
+    </main>
+
+
+    <script src="api.js"></script>
+    <script src="menu.js"></script>
+    <script src="cuenta.js"></script>
+
+</body>
+
+</html>

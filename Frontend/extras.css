@@ -1,0 +1,153 @@
+/* Estilos adicionales: se carga después de style.css */
+
+[hidden] {
+    display: none !important;
+}
+
+.status-msg {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 20px 0;
+}
+
+.buy-btn {
+    cursor: pointer;
+}
+
+.buy-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* =========================
+   MENÚ
+   ========================= */
+
+.menu-btn {
+    cursor: pointer;
+}
+
+.menu-panel {
+    position: absolute;
+    top: 78px;
+    right: clamp(20px, 5vw, 72px);
+
+    display: none;
+    flex-direction: column;
+
+    min-width: 230px;
+
+    background: var(--cream);
+    border: 2px solid var(--ink);
+
+    z-index: 20;
+}
+
+.menu-panel.open {
+    display: flex;
+}
+
+.menu-panel a,
+.menu-panel button {
+    padding: 14px 18px;
+
+    border: 0;
+    border-bottom: 1px solid var(--ink);
+
+    background: none;
+    color: var(--ink);
+
+    font: inherit;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.menu-panel a:last-child,
+.menu-panel button:last-child {
+    border-bottom: 0;
+}
+
+.menu-panel a:hover,
+.menu-panel button:hover {
+    background: var(--card);
+}
+
+/* =========================
+   FORMULARIOS DE CUENTA
+   ========================= */
+
+.account-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+
+    margin-bottom: 55px;
+}
+
+.form-card {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+
+    border: 2px solid var(--ink);
+    background: var(--card);
+
+    padding: 28px;
+}
+
+.form-card h2 {
+    font-family: "DM Serif Display", serif;
+    font-weight: 400;
+    font-size: 31px;
+
+    margin: 0;
+}
+
+.field {
+    display: grid;
+    gap: 6px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.field input {
+    padding: 12px;
+
+    border: 2px solid var(--ink);
+    background: var(--cream);
+
+    font: inherit;
+    font-weight: 400;
+}
+
+.form-msg {
+    margin: 0;
+    min-height: 1.2em;
+
+    font-size: 13px;
+    color: #a02020;
+}
+
+.member-card {
+    max-width: 520px;
+    margin-bottom: 55px;
+}
+
+.member-card p {
+    margin: 0 0 8px;
+}
+
+@media (max-width: 720px) {
+    .menu-panel {
+        top: 70px;
+        right: 18px;
+    }
+
+    .account-grid {
+        grid-template-columns: 1fr;
+    }
+}
